@@ -83,7 +83,7 @@ class ParquetReader extends ParquetActor {
    * @return int [description]
    */
   public function getRowGroupCount() : int {
-    return count($this->_meta->row_groups);
+    return $this->_meta->row_groups[0]->num_rows;
   }
 
   /**
