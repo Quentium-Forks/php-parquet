@@ -167,6 +167,10 @@ class DataColumnReader
       $cd->definitionsOffset += $this->readLevels($reader, $this->maxDefinitionLevel, $cd->definitions, $cd->definitionsOffset, $ph->data_page_header->num_values);
     }
 
+    if ($cd->definitionsOffset === 0) {
+        throw new \Exception('Definition offset is 0, aborting');
+    }
+
     if($ph->data_page_header === null) {
       throw new \Exception('file corrupt, data page header missing');
     }
