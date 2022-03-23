@@ -40,6 +40,8 @@ final class CompressionCodec
 
     const ZSTD = 6;
 
+    const LZ4_RAW = 7;
+
     static public $__names = array(
         0 => 'UNCOMPRESSED',
         1 => 'SNAPPY',
@@ -48,6 +50,7 @@ final class CompressionCodec
         4 => 'BROTLI',
         5 => 'LZ4',
         6 => 'ZSTD',
+        7 => 'LZ4_RAW',
     );
 }
 

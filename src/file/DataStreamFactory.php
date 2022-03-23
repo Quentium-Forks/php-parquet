@@ -19,8 +19,13 @@ class DataStreamFactory
    */
   const codecToCompressionMethod = [
     CompressionCodec::UNCOMPRESSED  => 'none',
-    CompressionCodec::GZIP          => 'gzip',
     CompressionCodec::SNAPPY        => 'snappy',
+    CompressionCodec::GZIP          => 'gzip',
+    CompressionCodec::LZO           => 'lzo',
+    CompressionCodec::BROTLI        => 'brotli',
+    CompressionCodec::LZ4           => 'lz4',
+    CompressionCodec::ZSTD          => 'zstd',
+    CompressionCodec::LZ4_RAW       => 'lz4_raw',
   ];
 
   /**
@@ -138,12 +143,64 @@ class DataStreamFactory
 
       case 'snappy':
         //
-        // NOTE: needs php-snappy / php-ext-snappy to be installed
+        // NOTE: needs php-snappy to be installed (https://github.com/kjdev/php-ext-snappy)
         // You'll need to compile and install it yourself at the moment (no PECL and stuff).
         //
         $uncompressedData = snappy_uncompress($data);
         if($uncompressedData === false) {
           throw new \Exception('Decompression error (snappy)');
+        }
+        $data = $uncompressedData;
+        break;
+
+      case 'lzo':
+        //
+        // NOTE: needs php-lzo to be installed (https://github.com/Quentium-Forks/php-lzo)
+        // You'll need to compile and install it yourself at the moment (no PECL and stuff).
+        //
+        $uncompressedData = lzo_uncompress($data);
+        if($uncompressedData === false) {
+          throw new \Exception('Decompression error (lzo)');
+        }
+        $data = $uncompressedData;
+        break;
+
+      case 'brotli':
+        //
+        // NOTE: needs php-brotli to be installed (https://github.com/kjdev/php-ext-brotli)
+        // You'll need to compile and install it yourself at the moment (no PECL and stuff).
+        //
+        $uncompressedData = brotli_uncompress($data);
+        if($uncompressedData === false) {
+          throw new \Exception('Decompression error (brotli)');
+        }
+        $data = $uncompressedData;
+        break;
+
+      case 'lz4':
+      case 'lz4_raw':
+        // WARNING: LZ4 is actually LZ4 block, aka "raw", see
+        // https://github.com/apache/parquet-format/commit/7f06e838cbd1b7dbd722ff2580b9c2525e37fc46
+
+        //
+        // NOTE: needs php-lz4 to be installed (https://github.com/kjdev/php-ext-lz4)
+        // You'll need to compile and install it yourself at the moment (no PECL and stuff).
+        //
+        $uncompressedData = lz4_uncompress($data);
+        if($uncompressedData === false) {
+          throw new \Exception('Decompression error (lz4)');
+        }
+        $data = $uncompressedData;
+        break;
+
+      case 'zstd':
+        //
+        // NOTE: needs php-zstd to be installed (https://github.com/kjdev/php-ext-zstd)
+        // You'll need to compile and install it yourself at the moment (no PECL and stuff).
+        //
+        $uncompressedData = zstd_uncompress($data);
+        if($uncompressedData === false) {
+          throw new \Exception('Decompression error (zstd)');
         }
         $data = $uncompressedData;
         break;
